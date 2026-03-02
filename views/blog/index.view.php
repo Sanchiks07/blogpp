@@ -8,9 +8,11 @@
 <body>
     <h1>Visi bloga ieraksti</h1>
 
+    <p><a href="/create">Pievienot jaunu ierakstu</a></p>
+
     <ul>
         <?php foreach ($posts as $post) { ?>
-            <li><p><strong><?= htmlspecialchars($post["content"]) ?></strong></p></li>
+            <li><a href="show?id=<?= $post->id ?>"> <?= htmlspecialchars($post->content) ?> </a></li>
         <?php } ?>
     </ul>
 </body>

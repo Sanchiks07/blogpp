@@ -21,11 +21,20 @@ class BlogController {
     }
 
     public function create() {
-        return "views/blog/create.view.php";
+        require "views/blog/create.view.php";
     }
 
     public function store() {
-        Blog::create($_POST);
+        $content = trim($_POST['content'] ?? '');
+        $errors = [];
+
+        if ($content === '') {
+            $errors['content'] = 'Ieraksts nedrīkst būt tukšs';
+            require "views/blog/create.view.php";
+            return;
+        }
+
+        Blog::create(['content' => $content]);
         $this->redirect('/');
     }
 
@@ -50,10 +59,19 @@ class BlogController {
             return;
         }
 
-        $post->body = trim($_POST['body'] ?? '');
+        $content = trim($_POST['content'] ?? '');
+        $errors = [];
+
+        if ($content === '') {
+            $errors['content'] = 'Ieraksts nedrīkst būt tukšs';
+            require "views/blog/edit.view.php";
+            return;
+        }
+
+        $post->content = $content;
         $post->save();
 
-        $this->redirect('/posts/' . $id);
+        $this->redirect('/show?id=' . $id);
     }
 
     public function destroy($id) {

@@ -11,7 +11,18 @@ foreach ($routes as $controller) {
 if (array_key_exists($uri, $routes)) {
     [$controller, $method] = explode('@', $routes[$uri]);
     $instance = new $controller();
-    $instance->$method();
+
+    // determine parameters to pass to controller method
+    $params = [];
+    // if an id is provided via GET or POST, forward it as first argument
+    if (isset($_GET['id'])) {
+        $params[] = $_GET['id'];
+    } elseif (isset($_POST['id'])) {
+        $params[] = $_POST['id'];
+    }
+
+    // call controller method with any gathered parameters
+    $instance->$method(...$params);
 } else {
     http_response_code(404);
     echo "Lapa nav atrasta!";
